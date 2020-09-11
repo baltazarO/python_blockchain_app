@@ -6,9 +6,9 @@
 
 	<center>
 	<form action="/submit" id="textform" method="post">
-	    <textarea name="content" rows="4" cols="50" placeholder="Just write whatever you want to..."></textarea>
-	    <br>
-	    <input type="text" name="author" placeholder="Your name">
+		<input type="text" name="doc" placeholder="Document ID">
+		<input type="text" name="signer" placeholder="Signer ID">
+		<input type="text" name="verify" placeholder="Verifier ID">
 	    <input type="submit" value="Post">
 	</form>
 	</center>
@@ -24,14 +24,17 @@
     <div class="post_box">
 	   <div class="post_box-header">
 	      <div class="post_box-options"><button class="option-btn">Reply</button></div>
-	      <div style="background: rgb(0, 97, 146) none repeat scroll 0% 0%; box-shadow: rgb(0, 97, 146) 0px 0px 0px 2px;" class="post_box-avatar">{{post.author[0]}}</div>
-	      <div class="name-header">{{post.author}}</div>
+	      <div style="background: rgb(0, 97, 146) none repeat scroll 0% 0%; box-shadow: rgb(0, 97, 146) 0px 0px 0px 2px;" class="post_box-avatar">{{post.doc_id[0]}}</div>
+	      <div class="name-header">Document: {{post.doc_hash}}</div>
 	      <div class="post_box-subtitle"> Posted at <i>{{readable_time(post.timestamp)}}</i></div>
 	   </div>
 	   <div>
 	      <div class="post_box-body">
-	         <p>{{post.content}}</p>
-	      </div>
+	         <p>Signer: {{post.signer_hash}}</p>
+		  </div>
+		  <div class="post_box-body">
+			<p>Verifier: {{post.verifier_hash}}</p>
+		 </div>
 	   </div>
 	</div>
 	{% endfor %}
