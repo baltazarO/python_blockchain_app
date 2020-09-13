@@ -21,6 +21,9 @@ class Block:
         block_string = json.dumps(self.__dict__, sort_keys=True)
         return sha256(block_string.encode()).hexdigest()
 
+    def __repr__(self):  
+        return "index:% s transactions:% s timestamp:% s previous_hash:% s nonce:% s" % (self.index, self.transactions, self.timestamp, self.previous_hash, self.nonce)
+
 
 class Blockchain:
     # difficulty of our PoW algorithm
@@ -104,6 +107,25 @@ class Blockchain:
 
             if not cls.is_valid_proof(block, block_hash) or \
                     previous_hash != block.previous_hash:
+                result = False
+                break
+
+            block.hash, previous_hash = block_hash, block_hash
+
+        return result
+    
+    @classmethod
+    def check_chain(cls,chain):
+        result = True
+        previous_hash = "0"
+
+        for block in chain:
+            block_hash = block.hash
+            # remove the hash field to recompute the hash again
+            # using `compute_hash` method.
+            delattr(block, "hash")
+
+            if not cls.is_valid_proof(block, block_hash) or previous_hash != block.previous_hash:
                 result = False
                 break
 
@@ -198,6 +220,15 @@ def mine_unconfirmed_transactions():
             announce_new_block(blockchain.last_block)
         return "Block #{} is mined.".format(blockchain.last_block.index)
 
+# endpoint to request the node to verify the
+# blockchain data has not been tampered with
+@app.route('/verify_chain', methods=['GET'])
+def verify_blocks():
+    correct = verify_chain()
+    if not correct:
+        return "Blockchain data tampered with"
+    else:
+        return "Blockchain has not been changed."
 
 # endpoint to add new peers to the network.
 @app.route('/register_node', methods=['POST'])
@@ -328,5 +359,11 @@ def announce_new_block(block):
                       data=json.dumps(block.__dict__, sort_keys=True),
                       headers=headers)
 
+def verify_chain():
+    if blockchain.check_chain(blockchain.chain[1:]):
+        return True
+
+    return False
+    
 # Uncomment this line if you want to specify the port number in the code
 #app.run(debug=True, port=8000)
