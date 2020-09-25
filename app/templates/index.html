@@ -27,15 +27,15 @@
 	   <div class="post_box-header">
 	      <div class="post_box-options"><button class="option-btn">Reply</button></div>
 	      <div style="background: rgb(0, 97, 146) none repeat scroll 0% 0%; box-shadow: rgb(0, 97, 146) 0px 0px 0px 2px;" class="post_box-avatar">{{post.doc_id[0]}}</div>
-	      <div class="name-header">Document: {{post.doc_hash}}</div>
+	      <div class="name-header">Document: {{post.doc_id}} ({{post.doc_hash}})</div>
 	      <div class="post_box-subtitle"> Posted at <i>{{readable_time(post.timestamp)}}</i></div>
 	   </div>
 	   <div>
 	      <div class="post_box-body">
-	         <p>Signer: {{post.signer_hash}}</p>
+	         <p>Signer: {{post.signer_id}} ({{post.signer_hash}})</p>
 		  </div>
 		  <div class="post_box-body">
-			<p>Verifier: {{post.verifier_hash}}</p>
+			<p>Verifier: {{post.verifier_id}} ({{post.verifier_hash}})</p>
 		 </div>
 	   </div>
 	</div>

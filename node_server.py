@@ -241,8 +241,8 @@ def verify_blocks():
 
 @app.route('/change_block_chain', methods=['GET'])
 def change_blocks():
-    blockchain.chain[3].nonce = 1
-    return "Blockchain block nonce intentially tampered with"
+    blockchain.chain[1].transactions[0]['doc_id'] = "The Jungle"
+    return "Blockchain block intentially tampered with"
 
 # endpoint to add new peers to the network.
 @app.route('/register_node', methods=['POST'])
