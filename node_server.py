@@ -91,6 +91,7 @@ class Blockchain:
         Check if block_hash is valid hash of block and satisfies
         the difficulty criteria.
         """
+
         return (block_hash.startswith('0' * Blockchain.difficulty) and
                 block_hash == block.compute_hash())
 
@@ -117,9 +118,17 @@ class Blockchain:
     @classmethod
     def check_chain(cls,chain):
         result = True
-        previous_hash = "0"
+        hashy = chain[0].hash
+        delattr(chain[0],"hash")
+        previous_hash = chain[0].compute_hash()
+        first_block = True
 
         for block in chain:
+            if first_block:
+                chain[0].hash = hashy
+                first_block = False
+                continue
+
             block_hash = block.hash
             # remove the hash field to recompute the hash again
             # using `compute_hash` method.
@@ -229,6 +238,11 @@ def verify_blocks():
         return "Blockchain data tampered with"
     else:
         return "Blockchain has not been changed."
+
+@app.route('/change_block_chain', methods=['GET'])
+def change_blocks():
+    blockchain.chain[3].nonce = 1
+    return "Blockchain block nonce intentially tampered with"
 
 # endpoint to add new peers to the network.
 @app.route('/register_node', methods=['POST'])
@@ -360,7 +374,7 @@ def announce_new_block(block):
                       headers=headers)
 
 def verify_chain():
-    if blockchain.check_chain(blockchain.chain[1:]):
+    if blockchain.check_chain(blockchain.chain):
         return True
 
     return False

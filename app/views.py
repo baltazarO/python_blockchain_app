@@ -29,6 +29,7 @@ def fetch_posts():
                 tx["hash"] = block["previous_hash"]
                 content.append(tx)
 
+        print(content)
         global posts
         posts = sorted(content, key=lambda k: k['timestamp'],
                        reverse=True)
